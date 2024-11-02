@@ -1,6 +1,6 @@
 # Pixel_Vault
 Projeto individual para o 1º Semestre de Análise e Desenvolvimento de Sistemas.
-<img src="public/assets/imgs/principal.png" style="width = 250px">
+<img style="width = 250px; height = 200px;" src="public/assets/imgs/principal.png">
 
 ## Visão Geral do Projeto
 
