@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mysql = require('../mysql').pool;
 
 router.get('/', (req, res, next) => {
     res.status(200).send({
@@ -9,14 +10,26 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
 
-    const produto = {
-        nome: req.body.nome,
-        preco: req.body.preco 
-    }
+    mysql.getConnection((error, conn) => {
+        conn.query(
+            'INSERT INTO produtos (nome, preco) VALUES (?,?)',
+            [req.body.nome, req.body.preco],
+            (error, resultado, field) => {
+                conn.release();
 
-    res.status(201).send({
-        mensagem: 'Usando o POST dentro da rota de produtos',
-        produtoCriado: produto
+                if (error) {
+                    return res.status(500).send({
+                        error: error,
+                        response: null
+                    });
+                }
+
+                res.status(201).send({
+                    mensagem: 'Produto inserido com sucesso',
+                    id_produto: resultado.insertId
+                });
+            }
+        )
     });
 }); // comando para postar coisas nessa rota definida
 
