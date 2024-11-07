@@ -20,7 +20,7 @@ router.get('/', (req, res, next) => {
                             preco: prod.preco,
                             request: {
                                 tipo: 'GET',
-                                descricao: '',
+                                descricao: 'Retorna todos os produtos',
                                 url: 'http://localhost:3000/produtos/' + prod.idProdutos
                             }
                         }

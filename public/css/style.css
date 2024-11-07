@@ -1,0 +1,132 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+
+:root {
+    --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-primary: "Roboto", sans-serif;
+    --font-secondary: "Work Sans", sans-serif;
+}
+
+/* Colors */
+:root {
+    --color-default: #242039;
+    --color-primary: #0ed970;
+    --color-secondary: #7c98cf;
+    --color-hover: #ffc732;
+}
+
+/* Smooth scroll behavior */
+:root {
+    scroll-behavior: smooth;
+}
+
+/*--------------------------------------------------------------
+  # General
+  --------------------------------------------------------------*/
+body {
+    font-family: var(--font-default);
+    color: var(--color-default);
+    overflow-x: hidden;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffc732;
+    text-decoration: none;
+}
+
+.navbar ul li {
+    list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--color-primary);
+}
+
+/*--------------------------------------------------------------
+  Header Principal
+  --------------------------------------------------------------*/
+#header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.2);
+    font-family: "Tiny5", sans-serif;
+    font-style: normal;
+    transition: color 0.5s ease;
+    font-size: 20px;
+}
+
+
+
+#header .container-fluid {
+    display: flex;
+    width: 100vw;
+}
+
+#header .container-fluid #navbar ul {
+    display: flex;
+    justify-content: space-between;
+    width: 100vw;
+}
+
+#header .logo h1 {
+    font-size: 35px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0;
+    font-family: "Tiny5", sans-serif;
+    font-style: normal;
+    transition: color 0.5s ease;
+}
+
+#header .logo h1:hover {
+    color: var(--color-hover);
+}
+
+/*--------------------------------------------------------------
+  Main
+  --------------------------------------------------------------*/
+#carouselExampleSlidesOnly {
+    width: 100vw;
+    min-height: 100vh;
+    position: relative;
+}
+
+.carousel-item img {
+    height: 100vh;
+    object-fit: cover;
+}
+
+.carousel {
+    position: relative;
+}
+
+.carousel-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    z-index: 10;
+}
+
+.carousel-text h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.carousel-text p {
+    font-size: 1.2rem;
+}
