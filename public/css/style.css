@@ -5,6 +5,7 @@
     --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-primary: "Roboto", sans-serif;
     --font-secondary: "Work Sans", sans-serif;
+    --font-pixel: "Tiny5", sans-serif;
 }
 
 /* Colors */
@@ -22,13 +23,13 @@
 
 #background {
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 100%;
 }
 
 #background::before {
     content: "";
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5);
     position: absolute;
     z-index: 1;
     top: 0;
@@ -143,8 +144,7 @@ h6 {
     text-align: center;
     z-index: 10;
     color: var(--color-secondary);
-    -webkit-text-stroke-width: 0.8px;
-    -webkit-text-stroke-color: #0ed970;
+    font-weight: bold;
 }
 
 .carousel-text h1 {
@@ -161,21 +161,27 @@ h6 {
   --------------------------------------------------------------*/
 .cards {
     position: relative;
-    width: 400px;
+    width: 800px;
     height: 400px;
     transform: rotate(4deg);
     opacity: 0;
-    /* Esconde o card inicialmente */
     transform: translateY(20px);
-    /* Move o card um pouco para baixo */
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.cards::before {
+    content: "";
+    position: absolute;
+    border: 225px solid var(--color-secondary);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .cards.show {
     opacity: 1;
-    /* Torna o card visível */
     transform: translateY(0);
-    /* Retorna o card à posição original */
 }
 
 .frente {
@@ -196,16 +202,64 @@ h6 {
 
 .mid-content {
     display: flex;
-    gap: 25px;
+    gap: 10%;
+    padding: 25px;
+    width: 100%;
 }
 
 .mid {
-    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 100px 10px 100px;
+    width: 100vw;
+    background-color: black;
+}
+
+.mid h1 {
+    color: var(--color-primary);
+}
+
+.mid p {
+    color: var(--color-secondary);
 }
 
 .text-section {
     text-align: justify;
+    align-self: center;
+    padding: 80px;
+    font-size: larger;
 }
+
+.text-section h1 {
+    text-align: center;
+}
+
+/*--------------------------------------------------------------
+========================= Second-Content =========================
+  --------------------------------------------------------------*/
+.second-content {
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.7)),
+        url(../assets/imgs/street-long.png) no-repeat center center/cover;
+    background-color: rgb(137, 200, 225);
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 50vh;
+    color: #0ed970;
+}
+
+.second-content .text-section {
+    text-align: center;
+}
+
+/*--------------------------------------------------------------
+========================= Final-Content =========================
+  --------------------------------------------------------------*/
+  
+
 
 
 /*--------------------------------------------------------------
@@ -215,6 +269,21 @@ h6 {
     background-image: url(../assets/imgs/footer.gif);
     background-position: bottom;
     background-size: cover;
+    width: 100vw;
+}
+
+.footer-background {
+    position: relative;
+}
+
+.footer-background::before {
+    content: "";
+    background-color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .footer-content {
@@ -223,10 +292,22 @@ h6 {
 }
 
 .footer-content {
-    font-size: 1.15rem;
+    font-size: 1rem;
     color: var(--color-primary);
 }
 
 .footer-end {
     color: var(--color-primary)
+}
+
+.footer-info,
+h3,
+.footer-links,
+h4 {
+    font-weight: bold;
+}
+
+.social-links,
+a {
+    display: flex;
 }

@@ -1,0 +1,121 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
+
+:root {
+    --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-primary: "Roboto", sans-serif;
+    --font-secondary: "Work Sans", sans-serif;
+}
+
+/* Colors */
+:root {
+    --color-default: #242039;
+    --color-primary: #0ed970;
+    --color-secondary: #8a74fb;
+    --color-hover: #ffc732;
+}
+
+/* Smooth scroll behavior */
+:root {
+    scroll-behavior: smooth;
+}
+
+#background {
+    width: 100vw;
+    height: 100vh;
+}
+
+/*--------------------------------------------------------------
+  # General
+  --------------------------------------------------------------*/
+body {
+    font-family: var(--font-default);
+    color: var(--color-default);
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+}
+
+.nav a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ffc732;
+    text-decoration: none;
+}
+
+.nav ul li {
+    list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--color-primary);
+}
+
+/*--------------------------------------------------------------
+  Header Principal
+  --------------------------------------------------------------*/
+#header {
+    top: 0;
+    max-height: 120px;
+    width: 100%;
+    z-index: 10;
+    font-family: "Tiny5", sans-serif;
+    font-style: normal;
+    transition: color 0.5s ease;
+    font-size: 25px;
+    padding: 15px;
+}
+
+.logo {
+    text-decoration: none;
+}
+
+#header .container-fluid {
+    list-style: none;
+    width: 100vw;
+}
+
+#header .logo h1 {
+    font-size: 55px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0;
+    font-family: "Tiny5", sans-serif;
+    font-style: normal;
+    transition: color 0.5s ease;
+}
+
+#header .logo h1:hover {
+    color: var(--color-hover);
+}
+
+#header .nav {
+    width: 100%;
+}
+
+/*--------------------------------------------------------------
+  Sessão de busca dos jogos
+  --------------------------------------------------------------*/
+  .search-games {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    width: 50%;
+  }
+
+  input {
+    position: relative;
+    z-index: 99;
+  }

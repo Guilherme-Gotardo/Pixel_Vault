@@ -1,28 +1,21 @@
 {
-  "name": "teste",
+  "name": "web-data-viz",
   "version": "1.0.0",
-  "description": "Teste de rest API para integração com Banco de Dados ",
-  "main": "index.js",
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon app.js",
+    "dev": "nodemon --exec node app.js"
   },
-  "keywords": [
-    "node",
-    "api",
-    "banco",
-    "de",
-    "dados"
-  ],
-  "author": "Guilherme Gotardo Santos",
-  "license": "ISC",
+  "author": "Feito pelos desenvolvedores @ São Paulo Tech School / Bandtec Digital School",
+  "license": "MIT",
   "dependencies": {
-    "express": "^4.21.1",
-    "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
-    "mysql2": "^3.11.4"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.7"
+    "@google/generative-ai": "^0.7.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.17.1",
+    "mysql2": "^3.9.4",
+    "nodemon": "^2.0.22",
+    "path": "^0.12.7"
   }
 }
