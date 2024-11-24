@@ -29,7 +29,7 @@
     <script src="./js/script.js"></script>
 </head>
 
-<body>
+<body onload="listarJogos()">
 
     <!-- ======= Header ======= -->
     <div id="background">
@@ -47,9 +47,6 @@
                     <a class="nav-link" href="#">Jogos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Consoles</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="./login.html">Login</a>
                 </li>
             </ul>
@@ -58,13 +55,84 @@
         <div class="search-games">
             <h1> Procure seus jogos favoritos e veja avaliações de outros usuários! </h1>
             <label for="exampleDataList" class="form-label"></label>
-            <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Digite o nome do jogo...">
-            <datalist id="datalistOptions">
-                <option value="">
-                <option value="">
-                <option value="">
-                <option value="">
-                <option value="">
-            </datalist>
+
+            <input type="text" id="searchInput" placeholder="Buscar jogo...">
+            <button onclick="buscarJogo()">Buscar</button>
         </div>
     </div>
+</body>
+
+</html>
+
+<script>
+    function listarJogos() {
+
+        // Primeiramente, tenta recuperar os jogos do sessionStorage
+        const jogos = JSON.parse(sessionStorage.JOGOS || "[]");
+
+        // Verifica se há jogos armazenados no sessionStorage
+        if (jogos.length > 0) {
+            console.log("Jogos recuperados do sessionStorage:", jogos);
+            jogos.forEach(jogo => {
+                console.log(`Nome: ${jogo.nome}, Gênero: ${jogo.genero}`);
+            });
+        } else {
+            console.log("Nenhum jogo encontrado no sessionStorage.");
+
+            // Caso não haja jogos no sessionStorage, faz uma requisição para buscar os jogos
+            fetch("/jogos/listar", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(json => {
+                            // Armazena os jogos recebidos no sessionStorage
+                            sessionStorage.JOGOS = JSON.stringify(json);
+                            console.log("Jogos recebidos do servidor:", json);
+
+                            // Exibe os jogos
+                            json.forEach(jogo => {
+                                console.log(`Nome: ${jogo.nome}, Gênero: ${jogo.genero}`);
+                            });
+                        });
+                    } else {
+                        console.log("Erro ao buscar jogos. Status:", resposta.status);
+                    }
+                })
+                .catch(function (erro) {
+                    console.log("Erro na requisição:", erro);
+                });
+        }
+    }
+
+    function buscarJogo() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();  // Obtém o termo de busca
+        const jogos = JSON.parse(sessionStorage.JOGOS || "[]");
+
+        // Verifica se existem jogos no sessionStorage
+        if (jogos.length > 0) {
+            // Filtra os jogos que correspondem ao termo de busca (pode buscar por nome ou gênero)
+            const jogoEncontrado = jogos.find(jogo =>
+                jogo.nome.toLowerCase().includes(searchTerm) ||
+                jogo.descricao.toLowerCase().includes(searchTerm)
+            );
+
+            // Se encontrar um jogo, redireciona para a página de detalhes
+            if (jogoEncontrado) {
+                // Armazena o id do jogo selecionado no sessionStorage
+                sessionStorage.setItem('ID_JOGO_SELECIONADO', jogoEncontrado.idjogo);
+                // Redireciona para a página de detalhes
+                window.location.href = `/jogo-detalhes.html`;
+
+            } else {
+                alert("Jogo não encontrado!");
+            }
+        } else {
+            console.log("Nenhum jogo encontrado no sessionStorage.");
+        }
+    }
+
+</script>

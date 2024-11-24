@@ -44,9 +44,6 @@
                     <a class="nav-link" href="./jogos.html">Jogos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Consoles</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="./login.html">Login</a>
                 </li>
             </ul>
@@ -62,7 +59,7 @@
                         <i class="ri-user-3-line login-icon"></i>
 
                         <div class="login-box-input">
-                            <input type="email" required class="login-input" id="login-email" placeholder=" ">
+                            <input type="email" required class="login-input" id="email_usuario" placeholder=" ">
                             <label for="login-email" class="login-label">Email</label>
                         </div>
                     </div>
@@ -71,7 +68,7 @@
                         <i class="ri-lock-2-line login-icon"></i>
 
                         <div class="login-box-input">
-                            <input type="password" required class="login-input" id="login-pass" placeholder=" ">
+                            <input type="password" required class="login-input" id="senha_usuario" placeholder=" ">
                             <label for="login-pass" class="login-label">Senha</label>
                             <i class="ri-eye-off-line login-eye" id="login-eye"></i>
                         </div>
@@ -87,7 +84,7 @@
                     <a href="#" class="login-forgot">Esquecen sua senha?</a>
                 </div>
 
-                <button type="submit" class="login-button">Login</button>
+                <button type="submit" class="login-button" onclick="entrar()">Login</button>
 
                 <p class="login-register">
                     Não tem uma conta? <a href="#" id="register_red">Cadastre-se</a>
@@ -103,21 +100,21 @@
                 <div class="login-content">
                     <div class="login-box">
                         <div class="login-box-input">
-                            <input type="text" required class="login-input" placeholder=" " id="nome_usuario">
+                            <input type="text" required class="login-input" placeholder=" " id="nome_input">
                             <label for="login-email" class="login-label">Nome Completo</label>
                         </div>
                     </div>
 
                     <div class="login-box">
                         <div class="login-box-input">
-                            <input type="email" required class="login-input" placeholder=" " id="email_usuario">
+                            <input type="email" required class="login-input" placeholder=" " id="email_input">
                             <label for="login-email" class="login-label">Email</label>
                         </div>
                     </div>
 
                     <div class="login-box">
                         <div class="login-box-input">
-                            <input type="password" required class="login-input" placeholder=" " id="senha_usuario">
+                            <input type="password" required class="login-input" placeholder=" " id="senha_input">
                             <label for="login-pass" class="login-label">Senha</label>
                         </div>
                     </div>
@@ -130,7 +127,7 @@
                     </div>
                 </div>
 
-                <button type="register" class="register-button" id="register_button">Cadastre-se</button>
+                <button type="register" class="register-button" onclick="cadastrar()">Cadastre-se</button>
 
                 <p class="login-register">
                     Já possuí uma conta? <a href="#" id="login_red">Entrar</a>
@@ -139,6 +136,128 @@
         </div>
 
         <script>
+            function cadastrar() {
+
+                // Recupere o valor da nova input pelo nome do id
+                var nomeVar = nome_input.value;
+                var emailVar = email_input.value;
+                var senhaVar = senha_input.value;
+
+                // Validação dos campos
+                const tamanhoNome = nomeVar.length > 1;
+                const emailConterArroba = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVar);
+                const tamanhoSenha = senhaVar.length > 6;
+
+                // Verificando se há algum campo em branco
+                if (
+                    nomeVar == "" ||
+                    emailVar == "" ||
+                    senhaVar == ""
+                ) {
+                    mensagemErro.innerHTML = "Campos obrigatórios estão vazios";
+                    mensagemErro.style.display = "block";
+                    return false;
+                } else if (!tamanhoNome) {
+                    mensagemErro.innerHTML = "O campo de nome deve ter mais que um caractere";
+                    mensagemErro.style.display = "block";
+                    return false;
+                } else if (!emailConterArroba) {
+                    mensagemErro.innerHTML = "O campo de email deve conter '@' e '.'";
+                    mensagemErro.style.display = "block";
+                    return false;
+                } else if (!tamanhoSenha) {
+                    mensagemErro.innerHTML = "A senha precisa ter mais que 6 caracteres";
+                    mensagemErro.style.display = "block";
+                    return false;
+                }
+
+                // Enviando o valor da nova input
+                fetch("/usuarios/cadastrar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        nomeServer: nomeVar,
+                        emailServer: emailVar,
+                        senhaServer: senhaVar
+                    }),
+                })
+                    .then(function (resposta) {
+                        console.log("resposta: ", resposta);
+
+                        if (resposta.ok) {
+                            // Exibe a mensagem de sucesso
+                            mensagemErro.innerHTML = "Cadastro realizado com sucesso! Você será redirecionado para o login!";
+                            mensagemErro.style.color = "green";
+                            mensagemErro.style.display = "block";
+
+                            // Redireciona para o login
+                            setTimeout(() => {
+                                window.location.href = "/login.html"; // Redirecionando para a página de login após 5 segundos
+                            }, 3000);
+
+                            limparFormulario(); // Chama a função para limpar os campos após o cadastro
+                        } else {
+                            throw "Houve um erro ao tentar realizar o cadastro!";
+                        }
+                    })
+                    .catch(function (resposta) {
+                        console.log(`#ERRO: ${resposta}`);
+                    });
+            }
+
+            function entrar() {
+                // Pegando os valores dos campos de email e senha
+                var emailVar = email_usuario.value;
+                var senhaVar = senha_usuario.value;
+
+                // Verificando se os campos estão vazios
+                if (emailVar == "" || senhaVar == "") {
+                    return false;
+                }
+
+                console.log("FORM LOGIN: ", emailVar);
+                console.log("FORM SENHA: ", senhaVar);
+
+                // Realiza a requisição para a autenticação
+                fetch("/usuarios/autenticar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        emailServer: emailVar,
+                        senhaServer: senhaVar
+                    })
+                }).then(function (resposta) {
+                    console.log("ESTOU NO THEN DO entrar()!");
+
+                    if (resposta.ok) {
+                        resposta.json().then(json => {
+
+                            console.log("Dados retornados do servidor:", json)
+                            sessionStorage.ID_USUARIO = json.idUsuario;
+                            sessionStorage.NOME_USUARIO = json.nome;
+                            sessionStorage.EMAIL_USUARIO = json.email;
+
+                            console.log("Redirecionando para: user.html");
+                            window.location = "user.html";
+                        });
+
+                    } else {
+                        console.log("Houve um erro ao tentar realizar o login!");
+                        resposta.text().then(texto => {
+                            console.error(texto);
+                        });
+                    }
+
+                }).catch(function (erro) {
+                    console.log(erro);
+                });
+            }
+
+
             /*=============== SHOW HIDDEN - PASSWORD ===============*/
             const showHiddenPass = (loginPass, loginEye) => {
                 const input = document.getElementById(loginPass),

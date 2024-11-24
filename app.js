@@ -18,7 +18,7 @@ app.use(cors());
 app.use((req, res, next) => {
     res.header('Acces-Control-Allow-Origin', '*');
     res.header(
-        'Acces-Control-Allow-Header', 
+        'Acces-Control-Allow-Header',
         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     );
 
@@ -33,11 +33,11 @@ app.use((req, res, next) => {
 const indexRouter = require("./src/routes/index");
 app.use("/", indexRouter);
 
-app.use('/teste', (req, res, next) => {
-    res.status(200).send({
-        mensagem: 'Ok, Deu certo'
-    });
-});
+const jogosRouter = require("./src/routes/jogos");
+app.use("/jogos", jogosRouter);
+
+const usuarioRouter = require("./src/routes/usuarios");
+app.use("/usuarios", usuarioRouter);
 
 // QUANDO NÃO ENCONTRAR NENHUMA ROTA
 app.use((req, res, next) => {
@@ -54,6 +54,7 @@ app.use((error, req, res, next) => {
         }
     })
 });
+
 
 app.listen(PORTA_APP, function () {
     console.log(`
@@ -72,6 +73,6 @@ app.listen(PORTA_APP, function () {
     \t\tPara alterar o ambiente, comente ou descomente as linhas 1 ou 2 no arquivo 'app.js'\n\n`);
 });
 
-module.exports = app;
 
-// começar com npm init para instalar os packages S
+
+module.exports = app;
