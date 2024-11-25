@@ -114,52 +114,69 @@ h6 {
     width: 70vw;
     max-height: 1000px;
     height: 500px;
-    margin-top: 30vh;
     background-color: #242039f6;
     backdrop-filter: blur(2px);
     border-radius: 8px;
 }
 
-.game-left {
+.image-box {
     display: flex;
-    flex-direction: column;
-    width: 30%;
-    color: white;
+    justify-content: center;
 }
 
-.game-left .image-box {
-    height: 250px;
-    width: 225px;
+.user-pic {
+    left: 50%;
     background-color: #0ed970;
-    margin-top: 10%;
-    margin-left: 10%;
-    border-radius: 8px;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    margin: 20px;
 }
 
-.about {
-    padding: 20px 0 0 20px ;
-}
-
-
-.game-info {
+.user-info {
     display: flex;
     flex-direction: column;
+    text-align: center;
     width: 70%;
     color: white;
     padding: 25px 25px 0 0px;
-
 }
 
-.describe {
-    margin-bottom: 20px;
+.avaliar-container {
+    display: none; /* Inicialmente escondida */
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border-radius: 8px;
 }
 
-.stats {
-    background-color: #8a74fb;
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
+.avaliar-conteudo {
     text-align: center;
-
 }
+
+#listaJogos {
+    width: 100%;
+    margin: 10px 0;
+}
+
+#nota {
+    width: 50px;
+    margin: 10px 0;
+}
+
+#fecharAvaliar {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
 

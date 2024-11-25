@@ -39,6 +39,9 @@ app.use("/jogos", jogosRouter);
 const usuarioRouter = require("./src/routes/usuarios");
 app.use("/usuarios", usuarioRouter);
 
+const avaliacaoRouter = require("./src/routes/avaliacoes");
+app.use("/avaliacoes", avaliacaoRouter);
+
 // QUANDO NÃO ENCONTRAR NENHUMA ROTA
 app.use((req, res, next) => {
     const erro = new Error('Não encontrado');

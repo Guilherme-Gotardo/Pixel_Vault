@@ -65,8 +65,8 @@
 </html>
 
 <script>
-    function listarJogos() {
 
+    function listarJogos() {
         // Primeiramente, tenta recuperar os jogos do sessionStorage
         const jogos = JSON.parse(sessionStorage.JOGOS || "[]");
 
@@ -122,8 +122,11 @@
 
             // Se encontrar um jogo, redireciona para a página de detalhes
             if (jogoEncontrado) {
-                // Armazena o id do jogo selecionado no sessionStorage
-                sessionStorage.setItem('ID_JOGO_SELECIONADO', jogoEncontrado.idjogo);
+
+                console.log("Jogo encontrado:", jogoEncontrado);
+                // Salva o ID do jogo selecionado no sessionStorage
+                sessionStorage.setItem('ID_JOGO_SELECIONADO', jogoEncontrado.idJogo);
+                console.log("ID do Jogo Armazenado:", jogoEncontrado.idJogo);
                 // Redireciona para a página de detalhes
                 window.location.href = `/jogo-detalhes.html`;
 

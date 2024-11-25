@@ -7,4 +7,8 @@ router.get("/listar", function (req, res) {
     jogosController.listar(req, res);
 });
 
+router.get("/estatisticas/:idJogo", function (req, res) {
+    jogosController.listarEstatisticas(req, res);
+});
+
 module.exports = router;

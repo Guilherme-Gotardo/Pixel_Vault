@@ -29,14 +29,14 @@
     <script src="./js/script.js"></script>
 </head>
 
-<body>
+<body onload="carregarJogos(), carregarFavorito(), carregarAvaliacoes()">
 
     <!-- ======= Header ======= -->
     <div id="background" style="
     background:
     linear-gradient(to right, rgb(0, 0, 0), rgba(0, 0, 0, 0), rgba(255, 255, 255, 0), rgb(0, 0, 0)), 
     linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), 
-    url(https://fantasyanime.com/squaresoft/images/ctwallpaper_43-3840x2160.jpg) center center / cover;">
+    url(https://media1.tenor.com/m/Q4SDldC74hYAAAAC/chrono-trigger-bonfire.gif) center center / cover;">
 
         <header id="header" class="header d-flex align-items-center">
             <div class="container-fluid">
@@ -51,67 +51,72 @@
                 <li class="nav-item">
                     <a class="nav-link" href="./jogos.html">Jogos</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" id="login_area">
                     <a class="nav-link" href="./login.html">Login</a>
                 </li>
             </ul>
         </header><!-- End of Header section -->
 
 
-        <!-- ======= Game section ======= -->
-        <div class="main-section">
-
-            <div class="game-left">
-                <div class="image-box">
-                    GAME IMAGE
-                </div>
-
-                <div class="about">
-                    <div>
-                        PLATAFORMAS:
-                    </div>
-
-                    <div>
-                        GENERO:
-                    </div>
-                </div>
-
+        <!-- ======= User section ======= -->
+        <div class="image-box">
+            <div class="user-pic">
+                <img src="" alt="">
             </div>
+        </div>
 
-            <div class="game-info">
-
-                <div id="jogoDetalhes" class="describe">
+        <div class="main-section">
+            <div class="user-info">
+                <div id="detalhesUsuario">
                     <!-- Os detalhes do jogo serão exibidos aqui -->
-                    <h1> Titulo </h1>
+                    <h1> Nome </h1>
                     <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. provident sint esse illo blanditiis
                         nihil culpa, veniam fugiat iusto, enim tenetur dolorum asperiores recusandae, error temporibus.
                         Amet eum ipsam distinctio nulla.</p>
                 </div>
 
-                <div class="stats">
-                    <div>
-                        MÉDIA DE AVALIAÇÕES
-                        <p>9.80</p>
+                <div class="register-game">
+                    <h1>JOGO FAVORITO</h1>
+
+                    <div class="fav-game">
+                        <div id="favGameDiv">
+                            <!-- O jogo favorito será carregado dinamicamente aqui -->
+                        </div>
                     </div>
 
-                    <div>
-                        QUANTIDADE DE VEZES FAVORITADO
-                        <p>52</p>
-                    </div>
+                    <p>Editar:</p>
+                    <!-- Lista de jogos disponíveis -->
+                    <select id="jogoFavoritoSelect">
+                        <option value="" disabled selected>Escolha um jogo</option>
+                    </select>
+                    <button onclick="marcarFavorito()">Marcar como favorito</button>
+                </div>
 
-                    <div>
-                        QUANTIDADE DE REVIEWS
-                        <p>3</p>
+                <div class="game-score">
+                    <button id="abrirAvaliacao">Avaliar Jogos</button>
+                </div>
+
+                <div id="divAvaliar" class="avaliar-container">
+                    <div class="avaliar-conteudo">
+                        <h2>Avaliar Jogos</h2>
+                        <select id="listaJogos">
+                            <!-- Lista de jogos cadastrados será inserida aqui -->
+                        </select>
+                        <label for="nota">Dê sua nota:</label>
+                        <input type="number" id="nota" name="nota" min="0" max="10" />
+                        <button id="enviarNota" onclick="enviarAvaliacao()">Enviar Avaliação</button>
+                        <button id="fecharAvaliar">Fechar</button>
                     </div>
                 </div>
 
-                <div class="graficos">
-                    <h1>Pontuação de usuarios</h1>
+                <div>
+                    <h2>Minhas Avaliações</h2>
+                    <ul id="listaAvaliacoes"></ul>
                 </div>
 
-                <div class="reviews">
-                    <p> Sessão de comentários dos usuários</p>
-                    <textarea name="comentários" id="comentarios_usuario"></textarea>
+                <div>
+                    <h2>Gráfico de Notas</h2>
+                    <canvas id="graficoNotas"></canvas>
                 </div>
             </div>
         </div>
@@ -119,5 +124,226 @@
 
 
 </body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </html>
+<script>
+
+    function carregarJogos() {
+        fetch("/jogos/listar", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.json())
+            .then(jogos => {
+                const selectElement = document.getElementById("jogoFavoritoSelect");
+                const selectElement2 = document.getElementById("listaJogos");
+
+                jogos.forEach(jogo => {
+                    const option = document.createElement("option");
+                    option.value = jogo.idJogo; // Usa o idJogo como valor
+                    option.textContent = jogo.nome; // Nome do jogo para o texto da opção
+                    selectElement.appendChild(option);
+
+                    // Adiciona ao segundo select
+                    selectElement2.appendChild(option.cloneNode(true));
+                });
+            })
+            .catch(error => {
+                console.error("Erro ao carregar jogos: ", error);
+            });
+    }
+
+
+    function marcarFavorito(idJogo) {
+
+        const idUsuario = sessionStorage.ID_USUARIO;
+        const nomeJogo = jogoFavoritoSelect.value;
+
+        fetch("/avaliacoes/favoritos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                idUsuario: idUsuario,
+                idJogo: jogoFavoritoSelect.value,
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert("Jogo favorito marcado com sucesso!");
+                window.location = 'user.html'
+            })
+            .catch(error => {
+                console.error("Erro ao marcar favorito: ", error);
+            });
+    }
+
+    function carregarFavorito() {
+        const idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/avaliacoes/favoritos/${idUsuario}`)
+            .then(res => res.json())
+            .then(jogoFavorito => {
+                // Verificar se existe um jogo favorito
+                if (jogoFavorito && jogoFavorito.length > 0) {
+                    const jogo = jogoFavorito[0];  // Acessa o primeiro jogo da lista
+
+                    // Atualiza a interface com os dados do jogo favorito
+                    const favGameDiv = document.querySelector('.fav-game');
+
+                    favGameDiv.innerHTML = `
+                    <img src="" alt="${jogo.nome}" />
+                    <h2>${jogo.nome}</h2>
+                `;
+                } else {
+                    // Caso não haja um jogo favorito, exibe uma mensagem ou algo semelhante
+                    const favGameDiv = document.querySelector('.fav-game');
+                    favGameDiv.innerHTML = `<p>Você ainda não tem um jogo favorito.</p>`;
+                }
+            })
+            .catch(err => console.error("Erro ao carregar favorito: ", err));
+    }
+
+    function enviarAvaliacao() {
+        const idJogo = listaJogosSelect.value;
+        const nota = notaInput.value;
+
+        if (idJogo && nota >= 0 && nota <= 10) {
+            fetch('/avaliacoes/notas', {  // Endpoint para salvar a avaliação
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    idUsuario: sessionStorage.ID_USUARIO,  // Use o ID do usuário armazenado
+                    idJogo: idJogo,
+                    nota: nota
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert('Avaliação enviada com sucesso!');
+                    divAvaliar.style.display = 'none';
+                })
+                .catch(err => {
+                    console.error('Erro ao enviar avaliação:', err);
+                    alert('Erro ao enviar a avaliação. Tente novamente.');
+                });
+        } else {
+            alert('Por favor, selecione um jogo e forneça uma nota válida.');
+        }
+    }
+
+    function carregarAvaliacoes() {
+        const idUsuario = sessionStorage.ID_USUARIO;
+
+        if (!idUsuario) {
+            console.error("ID de usuário não encontrado no sessionStorage.");
+            return;
+        }
+
+        fetch(`/avaliacoes/notas/${idUsuario}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Erro ao buscar as avaliações: ${res.statusText}`);
+                }
+                return res.json();
+            })
+            .then(avaliacoes => {
+                console.log("Dados recebidos:", avaliacoes);
+
+                if (!avaliacoes || avaliacoes.length === 0) {
+                    console.error("Nenhuma avaliação encontrada.");
+                    return;
+                }
+
+                const listaAvaliacoes = document.getElementById("listaAvaliacoes");
+                const labels = [];
+                const notas = [];
+
+                // Limpar o conteúdo anterior da lista de avaliações
+                listaAvaliacoes.innerHTML = '';
+
+                // Exibir as avaliações e preparar os dados para o gráfico
+                avaliacoes.forEach(avaliacao => {
+                    const li = document.createElement("li");
+                    li.textContent = `Jogo: ${avaliacao.nome} - Nota: ${avaliacao.nota}`;
+                    listaAvaliacoes.appendChild(li);
+
+                    labels.push(avaliacao.nome);
+                    notas.push(avaliacao.nota);
+                });
+
+                // Chama a função para renderizar o gráfico com as notas
+                renderizarGrafico(labels, notas);
+            })
+            .catch(error => console.error("Erro ao carregar avaliações: ", error));
+    }
+
+
+
+    function renderizarGrafico(labels, notas) {
+        const ctx = document.getElementById('graficoNotas').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Notas dos Jogos',
+                    data: notas,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        title: {
+                            display: true,
+                            text: 'Nota'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Jogos'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Variáveis
+    const abrirAvaliacaoBtn = document.getElementById('abrirAvaliacao');
+    const divAvaliar = document.getElementById('divAvaliar');
+    const fecharAvaliarBtn = document.getElementById('fecharAvaliar');
+    const listaJogosSelect = document.getElementById('listaJogos');
+    const enviarNotaBtn = document.getElementById('enviarNota');
+    const notaInput = document.getElementById('nota');
+
+    // Função para abrir a div de avaliação
+    abrirAvaliacaoBtn.addEventListener('click', () => {
+        divAvaliar.style.display = 'block'; // Exibe a div suspensa
+        carregarJogos(); // Preenche a lista de jogos
+    });
+
+    // Função para fechar a div de avaliação
+    fecharAvaliarBtn.addEventListener('click', () => {
+        divAvaliar.style.display = 'none'; // Esconde a div suspensa
+    });
+
+</script>

@@ -29,14 +29,16 @@
     <script src="./js/script.js"></script>
 </head>
 
-<body>
+<body onload="carregarEstatisticas()">
 
     <!-- ======= Header ======= -->
     <div id="background" style="
     background:
     linear-gradient(to right, rgb(0, 0, 0), rgba(0, 0, 0, 0), rgba(255, 255, 255, 0), rgb(0, 0, 0)), 
     linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), 
-    url(https://fantasyanime.com/squaresoft/images/ctwallpaper_43-3840x2160.jpg) center center / cover;">
+    url('') fixed;
+    background-size: cover;
+    background-repeat: no-repeat;">
 
         <header id="header" class="header d-flex align-items-center">
             <div class="container-fluid">
@@ -60,10 +62,9 @@
 
         <!-- ======= Game section ======= -->
         <div class="main-section">
-
             <div class="game-left">
-                <div class="image-box">
-                    GAME IMAGE
+                <div class="image-box" id="image_box">
+                    <!-- Exibir a imagem do jogo -->
                 </div>
 
                 <div class="about">
@@ -75,38 +76,20 @@
                         GENERO:
                     </div>
                 </div>
-
             </div>
 
             <div class="game-info">
-
                 <div id="jogoDetalhes" class="describe">
-                    <!-- Os detalhes do jogo serão exibidos aqui -->
-                    <h1> Titulo </h1>
-                    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. provident sint esse illo blanditiis
-                        nihil culpa, veniam fugiat iusto, enim tenetur dolorum asperiores recusandae, error temporibus.
-                        Amet eum ipsam distinctio nulla.</p>
+                    <!-- Os detalhes do jogo serão exibidos dinamicamente aqui -->
                 </div>
 
-                <div class="stats">
-                    <div>
-                        MÉDIA DE AVALIAÇÕES
-                        <p>9.80</p>
-                    </div>
-
-                    <div>
-                        QUANTIDADE DE VEZES FAVORITADO
-                        <p>52</p>
-                    </div>
-
-                    <div>
-                        QUANTIDADE DE REVIEWS
-                        <p>3</p>
-                    </div>
+                <div class="stats" id="stats">
+                    <!-- Exibir os status dos jogos -->
                 </div>
 
-                <div class="graficos">
-                    <h1>Pontuação de usuarios</h1>
+                <div>
+                    <h1>Estatísticas</h1>
+                    <canvas id="graficoNotas" width="400" height="200"></canvas>
                 </div>
 
                 <div class="reviews">
@@ -117,22 +100,120 @@
         </div>
     </div>
 </body>
-</html> 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</html>
 
 <script>
-    // Recupera os jogos do sessionStorage
-    const jogos = JSON.parse(sessionStorage.JOGOS);
-    const jogoSelecionado = sessionStorage.ID_JOGO_SELECIONADO;
-    const jogo = jogos.find(item => item.idjogo == jogoSelecionado);
 
-    // Exibe os detalhes do jogo
-    // document.getElementById("jogoDetalhes").innerHTML = `
-    //     <div id="grafico${jogo.idjogo}">
-    //         <h3>
-    //             <span id="titulojogo${jogo.idjogo}">${jogo.nome}</span>
-    //         </h3>
-    //         <div class="graph">
-    //             <canvas id="myChartCanvas${jogo.idjogo}"></canvas>
-    //         </div>
-    //     </div>`
+    function carregarEstatisticas() {
+        const idJogo = sessionStorage.ID_JOGO_SELECIONADO;
+        const jogos = JSON.parse(sessionStorage.JOGOS);
+
+        fetch(`/jogos/estatisticas/${idJogo}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+            .then(resposta => {
+                if (resposta.ok) {
+                    return resposta.json();
+                } else {
+                    throw new Error(`Erro ao buscar estatísticas: ${resposta.status}`);
+                }
+            })
+            .then(estatisticas => {
+                console.log("Estatísticas recebidas:", estatisticas);
+
+                const estatistica = estatisticas[0]
+
+                const backgroundElement = document.getElementById('background');
+                backgroundElement.style.backgroundImage = `linear-gradient(to right, rgb(0, 0, 0), rgba(0, 0, 0, 0), rgba(255, 255, 255, 0), rgb(0, 0, 0)), linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url('${estatistica.urlBg}')`;
+
+                image_box.innerHTML = `
+                <img src="${estatistica.urlCapa}" alt="">`
+
+                jogoDetalhes.innerHTML = `
+                <h1> ${estatistica.nome} </h1>
+                <p> ${estatistica.descricao}</p>`
+
+                stats.innerHTML = `
+                <div class="tag-stats">
+                    MÉDIA DE AVALIAÇÕES
+                    <p>${estatistica.mediaNotas}</p>
+                </div class="tag-stats">
+                <div>
+                    QUANTIDADE DE VEZES FAVORITADO
+                    <p>${estatistica.qtdeFavorito}</p>
+                </div class="tag-stats">
+                <div>
+                    QUANTIDADE DE REVIEWS
+                    <p>${estatistica.quantidade}</p>
+                </div>`;
+
+                renderizarGrafico(estatisticas);
+            })
+            .catch(erro => {
+                console.error("Erro ao carregar estatísticas:", erro);
+            });
+    }
+
+    function renderizarGrafico(estatisticas) {
+        const labels = estatisticas.map(est => est.nota);
+        const dados = estatisticas.map(est => est.quantidade);
+
+        const ctx = document.getElementById("graficoNotas").getContext("2d");
+
+        // Destrua o gráfico anterior, se houver
+        if (window.grafico) {
+            window.grafico.destroy();
+        }
+
+        window.grafico = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Quantidade de Usuários",
+                    data: dados,
+                    barThickness: 30,
+                    backgroundColor: '#0ed970', // Cor das barras (verde especificado)
+                    borderColor: '#0ed970',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                indexAxis: 'y',
+                responsive: true,
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Notas de usuarios',
+                            color: 'white',
+                            font: {
+                                size: 15
+                            }
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
 </script>
