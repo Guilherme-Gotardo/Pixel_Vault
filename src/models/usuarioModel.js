@@ -1,3 +1,4 @@
+const { resgatar } = require("../controllers/usuarioController");
 var database = require("../database/config")
 
 function cadastrar(nome, email, senha) {
@@ -22,7 +23,16 @@ function autenticar(email, senha) {
     return database.executar(instrucaoSql);
 }
 
+function resgatarDados(idUsuario) {
+    var instrucaoSql = `
+        SELECT * FROM usuario WHERE idUsuario = ${idUsuario};
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     cadastrar,
-    autenticar
+    autenticar,
+    resgatarDados
 };

@@ -220,6 +220,13 @@ img {
     position: relative;
 }
 
+input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px #00000000 inset; /* Define o fundo da mesma cor da sua caixa */
+    -webkit-text-fill-color: #ffffff; /* Define a cor do texto */
+    border: 1px solid #cccccc00; /* Mantém a borda consistente */
+    transition: background-color 5000s ease-in-out 0s; /* Evita o piscar do fundo */
+}
+
 .login-label {
     position: absolute;
     left: 0;

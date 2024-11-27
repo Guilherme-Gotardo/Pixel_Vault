@@ -79,7 +79,27 @@ function autenticar(req, res) {
     }
 }
 
+
+function resgatarDados(req, res) {
+    const { idUsuario } = req.params;
+
+    usuarioModel.resgatarDados(idUsuario)
+        .then(function (resultado) {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).json([]);
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao buscar o Usuario! Erro: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 module.exports = {
     cadastrar,
-    autenticar
+    autenticar,
+    resgatarDados
 }

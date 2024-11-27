@@ -1,6 +1,7 @@
 /* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Tiny5&display=swap');
 
+
 :root {
     --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-primary: "Roboto", sans-serif;
@@ -23,6 +24,13 @@
 #background {
     width: 100vw;
     height: 100vh;
+    background: 
+    linear-gradient(rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.7)),
+    url(../assets/imgs/library-wallpaper.jpg) no-repeat center center/cover;
+    margin: 0;
+    padding: 0;
+    background-attachment: fixed;
 }
 
 /*--------------------------------------------------------------
@@ -74,6 +82,8 @@ h6 {
     transition: color 0.5s ease;
     font-size: 25px;
     padding: 15px;
+    position: relative;
+    margin: 0;
 }
 
 .logo {
@@ -106,16 +116,39 @@ h6 {
 /*--------------------------------------------------------------
   Sessão de busca dos jogos
   --------------------------------------------------------------*/
-  .search-games {
+.search-games {
     display: flex;
     flex-direction: column;
     justify-self: center;
     align-self: center;
     text-align: center;
-    width: 50%;
-  }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
-  input {
+input {
     position: relative;
     z-index: 99;
-  }
+}
+
+.search-games {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-caption input {
+    max-width: 400px;
+}
+
+.search-games h1 {
+    color: var(--color-secondary);
+    font-size: 50px;
+}
+
+.search-games p {
+    font-size: 25px;
+}

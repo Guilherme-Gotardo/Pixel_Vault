@@ -15,11 +15,13 @@ function listarEstatisticas(idJogo) {
             jogo.descricao,
             jogo.urlCapa,
             jogo.urlBg,
+            jogo.urlVideo,
             jogo.plataforma,
-            jogo.dtLancamento,
+            DATE_FORMAT(dtLancamento, '%d/%m/%Y') AS dtLancamento,
+            jogo.genero,
             nota,
             ROUND(avg(nota),2) AS 'mediaNotas',
-            COUNT(favorito) AS 'qtdeFavorito', 
+            SUM(favorito) AS 'qtdeFavorito', 
             COUNT(*) AS quantidade
         FROM avaliacao
         JOIN jogo ON idJogo = fkJogo

@@ -239,9 +239,9 @@ h6 {
 ========================= Second-Content =========================
   --------------------------------------------------------------*/
 .second-content {
-    background: 
+    background:
         linear-gradient(rgba(0, 0, 0, 0.7),
-        rgba(0, 0, 0, 0.7)),
+            rgba(0, 0, 0, 0.7)),
         url(../assets/imgs/street-long.png) no-repeat center center/cover;
     background-color: rgb(137, 200, 225);
     display: flex;
@@ -258,7 +258,7 @@ h6 {
 /*--------------------------------------------------------------
 ========================= Final-Content =========================
   --------------------------------------------------------------*/
-  
+
 
 
 
@@ -266,14 +266,20 @@ h6 {
 ============================ Footer ============================
   --------------------------------------------------------------*/
 .footer-bg {
-    background-image: url(../assets/imgs/footer.gif);
     background-position: bottom;
     background-size: cover;
     width: 100vw;
 }
 
 .footer-background {
-    position: relative;
+    position: absolute;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0.7)),
+        url(../assets/imgs/footer.gif) no-repeat center center/cover;
+    margin: 0;
+    padding: 0;
+    background-attachment: fixed;
 }
 
 .footer-background::before {
@@ -310,4 +316,5 @@ h4 {
 .social-links,
 a {
     display: flex;
+    font-size: 18px;
 }

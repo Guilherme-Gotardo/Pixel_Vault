@@ -93,7 +93,8 @@ function carregarNotas(idUsuario) {
             SELECT jogo.idJogo, jogo.nome, avaliacao.nota
             FROM avaliacao
             JOIN jogo ON jogo.idJogo = avaliacao.fkJogo
-            WHERE avaliacao.fkUsuario = ${idUsuario};
+            WHERE avaliacao.fkUsuario = ${idUsuario}
+            ORDER BY avaliacao.nota DESC;
         `;
 
         // Chama a função para executar a consulta no banco, passando o idUsuario como parâmetro

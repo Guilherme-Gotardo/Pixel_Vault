@@ -146,12 +146,11 @@ h6 {
 }
 
 .stats {
-    background-color: #8a74fb;
     height: 100px;
     display: flex;
     justify-content: space-between;
     text-align: center;
-
+    margin-bottom: 50px;
 }
 
 .game-left .image-box img {
@@ -161,3 +160,26 @@ h6 {
     border-radius: 8px;
 }
 
+#jogoDetalhes h1 {
+    font-family: var(--font-pixel);
+    color: var(--color-primary);
+    font-size: 50px;
+}
+
+.main-section {
+    font-family: var(--font-secondary);
+    color: var(--color-secondary);
+}
+
+#video_gameplay video {
+    border-radius: 8px;
+    margin-bottom: 50px;
+}
+
+.tag-stats {
+    background-color: #0ed970b9;
+    width: 200px;
+    border-radius: 8px;
+    color: #8a74fb;
+    font-weight: bold;
+}
