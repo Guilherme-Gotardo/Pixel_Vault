@@ -76,7 +76,7 @@ idComentario INT AUTO_INCREMENT,
 fkJogo INT NOT NULL,
 fkUsuario INT NOT NULL,
 comentario VARCHAR(500),
-dtComentario DATE,
+dtComentario DATE DEFAULT CURRENT_TIMESTAMP,
 
 CONSTRAINT pkCompostaComentario PRIMARY KEY (idComentario, fkJogo, fkUsuario),
 CONSTRAINT fkJogoComentario FOREIGN KEY (fkJogo) REFERENCES jogo(idJogo),
