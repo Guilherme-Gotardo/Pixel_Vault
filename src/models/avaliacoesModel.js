@@ -41,7 +41,7 @@ function carregar(idUsuario) {
         var instrucaoSql = `
             SELECT * FROM jogo
             JOIN avaliacao ON idJogo = fkJogo
-            WHERE fkUsuario = 1 AND favorito = 1;
+            WHERE fkUsuario = ${idUsuario} AND favorito = 1;
         `;
 
         // Chama a função para executar a consulta no banco, passando o idUsuario como parâmetro

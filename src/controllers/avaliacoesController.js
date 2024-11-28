@@ -29,7 +29,7 @@ function marcarFavorito(req, res) {
 }
 
 function carregarFavorito(req, res) {
-    const { idUsuario } = req.body;  // Só o idUsuario é necessário para buscar o favorito
+    const { idUsuario } = req.params;  // Só o idUsuario é necessário para buscar o favorito
 
     // Chama o método do modelo que vai retornar o jogo favorito
     avaliacoesModel.carregar(idUsuario)
