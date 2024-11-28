@@ -273,3 +273,12 @@ h6 {
 .graficos {
     margin-bottom: 50px;
 }
+
+.avaliar-conteudo h2{
+    font-family: var(--font-pixel);
+    color: #0ed970;
+}
+
+.avaliar-container {
+    background-color: #242039c6;
+}

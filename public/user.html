@@ -76,7 +76,7 @@
 
                 <div class="edition">
                     <div class="reviews-user">
-                        <h2>Maiores 5 notas</h2>
+                        <h2> TOP 3 AVALIAÇÕES </h2>
                         <ul id="listaAvaliacoes"></ul>
                     </div>
 
@@ -95,14 +95,14 @@
 
                 <div id="divAvaliar" class="avaliar-container">
                     <div class="avaliar-conteudo">
-                        <h2>Avaliar Jogos</h2>
+                        <h2> Avalie os jogos cadastrados! </h2>
                         <select id="listaJogos">
                             <!-- Lista de jogos cadastrados será inserida aqui -->
                         </select>
                         <label for="nota">Dê sua nota:</label>
                         <input type="number" id="nota" name="nota" min="0" max="10" />
-                        <button id="enviarNota" onclick="enviarAvaliacao()">Enviar Avaliação</button>
-                        <button id="fecharAvaliar">Fechar</button>
+                        <button id="enviarNota" onclick="enviarAvaliacao()" class="btn btn-primary mt-1">Enviar Avaliação</button>
+                        <button id="fecharAvaliar" class="btn btn-primary mt-2">Fechar</button>
                     </div>
                 </div>
 
@@ -138,13 +138,14 @@
                 const selectElement = document.getElementById("jogoFavoritoSelect");
                 const selectElement2 = document.getElementById("listaJogos");
 
+                selectElement.innerHTML = "";
+                selectElement2.innerHTML = "";
+
                 jogos.forEach(jogo => {
                     const option = document.createElement("option");
-                    option.value = jogo.idJogo; // Usa o idJogo como valor
-                    option.textContent = jogo.nome; // Nome do jogo para o texto da opção
+                    option.value = jogo.idJogo; 
+                    option.textContent = jogo.nome; 
                     selectElement.appendChild(option);
-
-                    // Adiciona ao segundo select
                     selectElement2.appendChild(option.cloneNode(true));
                 });
             })
@@ -281,7 +282,7 @@
                     notas.push(avaliacao.nota);
                 });
 
-                for (let i = 0; i < Math.min(5, labels.length); i++) {
+                for (let i = 0; i < Math.min(3, labels.length); i++) {
                     const li = document.createElement("li");
                     li.textContent = `Jogo: ${labels[i]} - Nota: ${notas[i]}`;
                     listaAvaliacoes.appendChild(li);

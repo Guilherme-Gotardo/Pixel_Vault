@@ -256,8 +256,8 @@
                 console.log("resposta: ", resposta);
 
                 if (resposta.ok) {
-                    // Exibe a mensagem de sucesso
-                    alert('Comentário Cadastrado Com sucesso')
+                    // Recarrega a página
+                    window.location = './jogo-detalhes.html'
 
                 } else {
                     throw "Houve um erro ao tentar realizar o comentário!";
