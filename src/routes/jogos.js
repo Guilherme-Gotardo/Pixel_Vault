@@ -15,4 +15,9 @@ router.get("/listarComentarios/:idJogo", function (req, res) {
     jogosController.listarComentario(req, res);
 });
 
+router.get("/kpi/:idJogo", function (req, res) {
+    jogosController.carregarKpi(req, res);
+});
+
+
 module.exports = router;

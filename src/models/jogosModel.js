@@ -20,7 +20,7 @@ function listarEstatisticas(idJogo) {
             DATE_FORMAT(dtLancamento, '%d/%m/%Y') AS dtLancamento,
             jogo.genero,
             nota,
-            ROUND(avg(nota),2) AS 'mediaNotas',
+            ROUND(avg(nota)) AS 'mediaNotas',
             SUM(favorito) AS 'qtdeFavorito', 
             COUNT(*) AS quantidade
         FROM avaliacao
@@ -28,6 +28,31 @@ function listarEstatisticas(idJogo) {
         WHERE idJogo = ${idJogo}
         GROUP BY nota
         ORDER BY nota;
+          `;
+
+    // Chama a função para executar a consulta no banco, passando o idUsuario como parâmetro
+    database.executar(instrucaoSql, [idJogo])
+      .then(function (resultado) {
+        resolve(resultado);
+      })
+      .catch(function (erro) {
+        console.error(erro);
+        reject(erro);
+      });
+  });
+}
+
+function carregarKpi(idJogo) {
+  return new Promise((resolve, reject) => {
+    var instrucaoSql = `
+        SELECT 
+	        TRUNCATE(avg(nota),2) AS 'mediaNotas',
+          SUM(favorito) AS 'qtdeFavorito',
+          COUNT(*) AS quantidade
+        FROM avaliacao
+        JOIN jogo ON idJogo = fkJogo
+        WHERE idjogo = ${idJogo}
+        GROUP BY nome;;
           `;
 
     // Chama a função para executar a consulta no banco, passando o idUsuario como parâmetro
@@ -57,5 +82,6 @@ function listarComentario(idJogo) {
 module.exports = {
   listar,
   listarEstatisticas,
-  listarComentario
+  listarComentario,
+  carregarKpi
 };

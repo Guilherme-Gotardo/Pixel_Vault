@@ -37,6 +37,30 @@ function listarEstatisticas(req, res) {
         });
 }
 
+function carregarKpi(req, res) {
+    const { idJogo } = req.params;  // Só o idUsuario é necessário para buscar as notas
+
+    if (!idJogo) {
+        return res.status(400).json({ error: "idUsuario não fornecido." });
+    }
+
+    jogosModel.carregarKpi(idJogo)
+        .then(function (resultado) {
+            if (resultado.length > 0) {
+                // Se encontrar resultados, retorna as Notas
+                res.status(200).json(resultado);
+            } else {
+                // Caso contrário, retorna uma resposta vazia (nenhum favorito encontrado)
+                res.status(204).json([]);
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao buscar as notas! Erro: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 function listarComentario(req, res) {
     const { idJogo } = req.params;
 
@@ -58,5 +82,6 @@ function listarComentario(req, res) {
 module.exports = {
     listar,
     listarEstatisticas,
-    listarComentario
+    listarComentario,
+    carregarKpi
 }

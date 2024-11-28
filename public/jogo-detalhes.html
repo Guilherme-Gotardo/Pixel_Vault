@@ -30,7 +30,7 @@
     <script src="./js/sessao.js"></script>
 </head>
 
-<body onload="carregarEstatisticas(), exibirComentarios(), validarSessao()">
+<body onload="carregarEstatisticas(), exibirComentarios(), validarSessao(), carregarKpi()">
 
     <!-- ======= Header ======= -->
     <div id="background" style="
@@ -155,6 +155,35 @@
                     <p style="color: #8a74fb"><b>DATA DE LANÇAMENTO: ${estatistica.dtLancamento}</b></p>
                 </div>`
 
+                renderizarGrafico(estatisticas);
+            })
+            .catch(erro => {
+                console.error("Erro ao carregar estatísticas:", erro);
+            });
+    }
+
+    function carregarKpi() {
+        const idJogo = sessionStorage.ID_JOGO_SELECIONADO;
+        const jogos = JSON.parse(sessionStorage.JOGOS);
+
+        fetch(`/jogos/kpi/${idJogo}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+            .then(resposta => {
+                if (resposta.ok) {
+                    return resposta.json();
+                } else {
+                    throw new Error(`Erro ao buscar estatísticas: ${resposta.status}`);
+                }
+            })
+            .then(estatisticas => {
+                console.log("Estatísticas recebidas:", estatisticas);
+
+                const estatistica = estatisticas[0]
+
                 stats.innerHTML = `
                 <div class="tag-stats">
                     <p style="font-size: 18px;">MÉDIA DE AVALIAÇÕES</p>
@@ -171,7 +200,6 @@
                     <p style="font-size: 18px;">${estatistica.quantidade}</p>
                 </div>`;
 
-                renderizarGrafico(estatisticas);
             })
             .catch(erro => {
                 console.error("Erro ao carregar estatísticas:", erro);
