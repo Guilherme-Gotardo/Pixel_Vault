@@ -1,12 +1,10 @@
 var usuarioModel = require("../models/usuarioModel.js");
 
 function cadastrar(req, res) {
-    // Crie uma variável que vá recuperar os valores do arquivo cadastro.html
     var nome = req.body.nomeServer;
     var email = req.body.emailServer;
     var senha = req.body.senhaServer;
 
-    // Faça as validações dos valores
     if (nome == undefined) {
         res.status(400).send("Seu nome está undefined!");
     } else if (email == undefined) {
@@ -15,7 +13,6 @@ function cadastrar(req, res) {
         res.status(400).send("Sua empresa a vincular está undefined!");
     } else {
 
-        // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
         console.log('Cadastrar na controller')
         usuarioModel.cadastrar(nome, email, senha)
             .then(
@@ -98,8 +95,75 @@ function resgatarDados(req, res) {
         });
 }
 
+function atualizarDescricao(req, res) {
+
+    var idUsuario = req.body.idUsuario;
+    var descricao = req.body.descricao;
+
+    console.log('Cadastrar na controller')
+    usuarioModel.atualizarDescricao(idUsuario, descricao)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao atualizar a descrição (CONTROLLER)! Erro: ",
+                    erro.sqlMessage
+                );
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
+function cadastrarComentario(req, res) {
+    var idJogo = req.body.idJogo
+    var idUsuario = req.body.idUsuario;
+    var comentario = req.body.comentarioServer;
+
+    console.log('Cadastrar comentário na controller')
+    usuarioModel.cadastrarComentario(idJogo, idUsuario, comentario)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        ).catch(
+            function (erro) {
+                console.log(erro);
+                console.log(
+                    "\nHouve um erro ao cadastrar o comentário! (CONTROLLER) ",
+                    erro.sqlMessage
+                );
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
+function resgatarComentarios(req, res) {
+    const { idUsuario } = req.params;
+
+    usuarioModel.resgatarComentarios(idUsuario)
+        .then(function (resultado) {
+            if (resultado.length > 0) {
+                res.status(200).json(resultado);
+            } else {
+                res.status(204).json([]);
+            }
+        })
+        .catch(function (erro) {
+            console.log(erro);
+            console.log("\nHouve um erro ao buscar os comentários do Usuário! Erro: ", erro.sqlMessage);
+            res.status(500).json(erro.sqlMessage);
+        });
+}
+
 module.exports = {
     cadastrar,
     autenticar,
-    resgatarDados
+    resgatarDados,
+    atualizarDescricao,
+    cadastrarComentario,
+    resgatarComentarios
 }

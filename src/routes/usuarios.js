@@ -12,8 +12,20 @@ router.post("/autenticar", function (req, res) {
     usuarioController.autenticar(req, res);
 });
 
+router.post("/atualizar-descricao", function (req, res) {
+    usuarioController.atualizarDescricao(req, res);
+});
+
+router.post("/cadastrar-comentario", function (req, res) {
+    usuarioController.cadastrarComentario(req, res);
+});
+
 router.get("/resgatarDados/:idUsuario", function (req, res) {
     usuarioController.resgatarDados(req, res);
+});
+
+router.get("/resgatarComentarios/:idUsuario", function (req, res) {
+    usuarioController.resgatarComentarios(req, res);
 });
 
 module.exports = router;

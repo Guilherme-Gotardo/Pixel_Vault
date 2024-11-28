@@ -27,9 +27,10 @@
 
     <!-- Script.js -->
     <script src="./js/script.js"></script>
+    <script src="./js/sessao.js"></script>
 </head>
 
-<body onload="carregarEstatisticas()">
+<body onload="carregarEstatisticas(), exibirComentarios(), validarSessao()">
 
     <!-- ======= Header ======= -->
     <div id="background" style="
@@ -54,12 +55,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="./jogos.html">Jogos</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./login.html">Login</a>
+                <li class="nav-item" id="areaLogin">
                 </li>
             </ul>
         </header><!-- End of Header section -->
-
 
         <!-- ======= Game section ======= -->
         <div class="main-section">
@@ -91,13 +90,15 @@
                     <canvas id="graficoNotas" width="400" height="200"></canvas>
                 </div>
 
-                <!-- <div class="reviews">
-                    <p> Sessão de comentários dos usuários</p>
-                    <textarea name="comentários" id="comentarios_usuario"></textarea>
-                </div> -->
+                <div class="reviews">
+                    <h1> Comentários dos usuários</h1>
+                    <textarea name="comentários" id="comentario_usuario"></textarea>
+                    <button onclick="cadastrarComentario()" class="btn btn-primary mt-2"> Comentar </button>
+                </div>
             </div>
         </div>
     </div>
+
 </body>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -232,6 +233,88 @@
                 }
             }
         });
+    }
+
+    function cadastrarComentario() {
+
+        const comentarioUsuario = comentario_usuario.value
+        const idUsuario = sessionStorage.ID_USUARIO
+        const idJogo = sessionStorage.ID_JOGO_SELECIONADO
+
+        fetch("/usuarios/cadastrar-comentario", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idJogo: idJogo,
+                idUsuario: idUsuario,
+                comentarioServer: comentarioUsuario
+            }),
+        })
+            .then(function (resposta) {
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    // Exibe a mensagem de sucesso
+                    alert('Comentário Cadastrado Com sucesso')
+
+                } else {
+                    throw "Houve um erro ao tentar realizar o comentário!";
+                }
+            })
+            .catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+    }
+
+    function exibirComentarios() {
+
+        const idJogo = sessionStorage.ID_JOGO_SELECIONADO
+
+        fetch(`/jogos/listarComentarios/${idJogo}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Erro ao buscar os dados do usuario: ${res.statusText}`);
+                }
+                return res.json();
+            })
+            .then(dadosJogos => {
+
+                const reviewsContainer = document.querySelector('.reviews'); // Seleciona o container onde os comentários serão exibidos.
+
+                // Limpa comentários anteriores, se houver.
+                const comentariosExistentes = document.querySelectorAll('.comentario-item');
+                comentariosExistentes.forEach(comentario => comentario.remove());
+
+                // Cria uma nova div para cada comentário recebido.
+                dadosJogos.forEach(comentario => {
+                    const comentarioDiv = document.createElement('div');
+                    comentarioDiv.classList.add('comentario-item'); // Adiciona uma classe para estilização.
+                    comentarioDiv.style.border = '1px solid #ccc';
+                    comentarioDiv.style.padding = '10px';
+                    comentarioDiv.style.margin = '10px 0';
+                    comentarioDiv.style.borderRadius = '5px';
+
+                    // Adiciona o conteúdo do comentário.
+                    comentarioDiv.innerHTML = `
+                    <b style="color:#0ed970;">Usuário:</b> ${comentario.nomeUsuario}<br>
+                    <b style="color:#0ed970;">Comentário:</b> ${comentario.comentario}
+                    `;
+
+                    // Adiciona a nova div ao container de comentários.
+                    reviewsContainer.appendChild(comentarioDiv);
+                });
+
+                console.log("Comentários recebidos:", dadosJogos);
+
+            })
+            .catch(error => console.error("Erro ao buscar dados do usuario: ", error));
     }
 
 </script>

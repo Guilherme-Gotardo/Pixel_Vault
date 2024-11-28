@@ -242,3 +242,34 @@ h6 {
     font-family: var(--font-pixel);
     color: var(--color-primary);
 }
+
+#detalhesUsuario button {
+    margin-bottom: 10px;
+}
+
+.first-section #detalhesUsuario {
+    justify-self: start;
+    margin-bottom: 10px;
+}
+
+#descricao {
+    max-width: 500px; 
+    max-height: 100px; 
+    overflow-y: auto; 
+    word-wrap: break-word; 
+    word-break: break-word; 
+    box-sizing: border-box; 
+    text-align: center;
+    display: flex;      
+    align-items: center; 
+    justify-content: center;
+}
+
+.register-game h2, .reviews-user h2, .graficos h2 {
+    font-family: var(--font-pixel);
+    color: var(--color-primary);
+}
+
+.graficos {
+    margin-bottom: 50px;
+}

@@ -29,7 +29,8 @@
     <script src="./js/script.js"></script>
 </head>
 
-<body id="background" onload="carregarJogos(), carregarFavorito(), carregarAvaliacoes(), resgatarDadosUsuario()">
+<body id="background"
+    onload="carregarJogos(), carregarFavorito(), carregarAvaliacoes(), resgatarDadosUsuario(), carregarQtdeComentarios(), validarSessao()">
 
     <!-- ======= Header ======= -->
     <div>
@@ -46,8 +47,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="./jogos.html">Jogos</a>
                 </li>
-                <li class="nav-item" id="login_area">
-                    <a class="nav-link" href="./login.html">Login</a>
+                <li class="nav-item" id="areaLogin">
                 </li>
             </ul>
         </header><!-- End of Header section -->
@@ -106,9 +106,14 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="graficos">
                     <h2>Gráfico de Notas</h2>
                     <canvas id="graficoNotas"></canvas>
+                </div>
+
+                <div class="graficos">
+                    <h2>Participação do usuário no site</h2>
+                    <canvas id="graficoQtdeComentarios"></canvas>
                 </div>
             </div>
         </div>
@@ -206,13 +211,13 @@
         const nota = notaInput.value;
 
         if (idJogo && nota >= 0 && nota <= 10) {
-            fetch('/avaliacoes/notas', {  // Endpoint para salvar a avaliação
+            fetch('/avaliacoes/notas', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    idUsuario: sessionStorage.ID_USUARIO,  // Use o ID do usuário armazenado
+                    idUsuario: sessionStorage.ID_USUARIO,
                     idJogo: idJogo,
                     nota: nota
                 })
@@ -307,7 +312,7 @@
             options: {
                 plugins: {
                     legend: {
-                        display: false 
+                        display: false
                     }
                 },
                 scales: {
@@ -320,7 +325,10 @@
                         title: {
                             display: true,
                             text: 'Nota',
-                            color: 'white'
+                            color: 'white',
+                            font: {
+                                size: 15
+                            }
                         }
                     },
                     x: {
@@ -330,13 +338,131 @@
                         title: {
                             display: true,
                             text: 'Jogos',
-                            color: 'white'
+                            color: 'white',
+                            font: {
+                                size: 15
+                            }
                         }
                     }
                 }
             }
         });
     }
+
+
+
+
+    function carregarQtdeComentarios() {
+
+        const idUsuario = sessionStorage.ID_USUARIO;
+
+        if (!idUsuario) {
+            console.error("ID de usuário não encontrado no sessionStorage.");
+            return;
+        }
+
+        fetch(`/usuarios/resgatarComentarios/${idUsuario}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`Erro ao buscar os comentários: ${res.statusText}`);
+                }
+                return res.json();
+            })
+            .then(avaliacoes => {
+                console.log("Dados recebidos:", avaliacoes);
+
+                if (!avaliacoes || avaliacoes.length === 0) {
+                    console.error("Nenhum comentário encontrado.");
+                    return;
+                }
+
+                const listaComentarios = document.getElementById("listaComentarios");
+                const labels = [];
+                const dataPorData = {};
+                const comentarios = [];
+
+                avaliacoes.forEach(avaliacao => {
+                    const data = avaliacao.dtComentario; // Data do comentário
+                    if (!dataPorData[data]) {
+                        dataPorData[data] = 0; // Inicializa o contador para a data
+                    }
+                    dataPorData[data]++;
+                });
+
+                // Extrai as datas e as contagens para os arrays
+                for (const [data, quantidade] of Object.entries(dataPorData)) {
+                    labels.push(data);
+                    comentarios.push(quantidade);
+                }
+
+                renderizarGrafico2(labels, comentarios);
+            })
+            .catch(error => console.error("Erro ao carregar avaliações: ", error));
+
+    }
+
+    function renderizarGrafico2(labels, comentarios) {
+        const ctx = document.getElementById('graficoQtdeComentarios').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Notas dos Jogos',
+                    data: comentarios,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    barThickness: 50
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        beginAtZero: true,
+                        max: 10,
+                        title: {
+                            display: true,
+                            text: 'Comentários Feitos',
+                            color: 'white',
+                            font: {
+                                size: 15
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Data do Comentário',
+                            color: 'white',
+                            font: {
+                                size: 15
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
 
     function resgatarDadosUsuario() {
 
@@ -360,10 +486,75 @@
                 const dados = dadosUsuario[0]
                 detalhesUsuario.innerHTML = `
                 <h1>${dados.nome}</h1>
-                <p> Descricao </p>`
+                <button id="editar-btn" class="btn btn-primary mt-2" onclick="editarDescricao()">Editar descrição</button>
+                <p id="descricao">${dados.descricaoUsuario}</p>`
 
             })
             .catch(error => console.error("Erro ao buscar dados do usuario: ", error));
+    }
+
+    function editarDescricao() {
+
+        const btn = document.getElementById('editar-btn');
+        const descricao = document.getElementById('descricao');
+
+        // Torna a área de descrição editável
+        descricao.contentEditable = "true";
+        descricao.style.border = "1px solid #ccc";
+        descricao.style.padding = "5px";
+        descricao.style.maxWidth = "500px";
+        descricao.style.maxHeight = "200px";
+        descricao.style.wordWrap = "break-word";
+        descricao.focus();
+
+        // Troca o botão de "Editar" para "Salvar"
+        btn.textContent = "Salvar descrição";
+        btn.classList.remove("btn-primary");
+        btn.classList.add("btn-success");
+        btn.setAttribute("onclick", "salvarDescricao()");
+
+    }
+
+    function salvarDescricao() {
+        const descricao = document.getElementById('descricao');
+        const btn = document.getElementById('editar-btn');
+        const idUsuario = sessionStorage.ID_USUARIO
+
+        // Remove a editabilidade e estilo
+        descricao.contentEditable = "false";
+        descricao.style.border = "none";
+        descricao.style.padding = "0";
+
+        // Envia os dados editados ao servidor
+        const novaDescricao = descricao.textContent.trim();
+
+        fetch(`/usuarios/atualizar-descricao`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                idUsuario: idUsuario,
+                descricao: novaDescricao
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert("Descrição atualizada com sucesso!");
+                } else {
+                    alert("Erro ao atualizar a descrição. (FETCH)");
+                }
+            })
+            .catch((error) => {
+                console.error("Erro ao enviar os dados:", error);
+            });
+
+
+        // Troca o botão de volta para "Editar"
+        btn.textContent = "Editar descrição";
+        btn.classList.remove("btn-success");
+        btn.classList.add("btn-primary");
+        btn.setAttribute("onclick", "editarDescricao()");
     }
 
     // Variáveis
@@ -384,5 +575,22 @@
     fecharAvaliarBtn.addEventListener('click', () => {
         divAvaliar.style.display = 'none'; // Esconde a div suspensa
     });
+
+    function validarSessao() {
+        var email = sessionStorage.EMAIL_USUARIO;
+        var nome = sessionStorage.NOME_USUARIO;
+
+        var login = document.getElementById("areaLogin");
+
+        if (email != null && nome != null) {
+            login.innerHTML = '<a class="nav-link"  href="./user.html" onclick="limparSessao()"> Logout </a>'
+        }
+    }
+
+    function limparSessao() {
+        event.preventDefault(); // Previne a navegação padrão
+        sessionStorage.clear(); // Limpa a sessão
+        window.location.href = "./login.html"; // Redireciona para a página de login
+    }
 
 </script>

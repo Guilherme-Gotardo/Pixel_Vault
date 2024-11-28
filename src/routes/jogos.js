@@ -11,4 +11,8 @@ router.get("/estatisticas/:idJogo", function (req, res) {
     jogosController.listarEstatisticas(req, res);
 });
 
+router.get("/listarComentarios/:idJogo", function (req, res) {
+    jogosController.listarComentario(req, res);
+});
+
 module.exports = router;

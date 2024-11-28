@@ -42,7 +42,20 @@ function listarEstatisticas(idJogo) {
   });
 }
 
+function listarComentario(idJogo) {
+  var instrucaoSql = `SELECT 
+                        usuario.nome AS nomeUsuario, 
+                        comentario 
+                      FROM comentario 
+                      JOIN usuario ON usuario.idUsuario = comentario.fkUsuario
+                      WHERE fkJogo = ${idJogo}`;
+
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
 module.exports = {
   listar,
-  listarEstatisticas
+  listarEstatisticas,
+  listarComentario
 };

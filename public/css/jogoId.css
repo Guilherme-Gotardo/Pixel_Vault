@@ -177,9 +177,29 @@ h6 {
 }
 
 .tag-stats {
-    background-color: #0ed970b9;
+    background-color: #06512acc;
     width: 200px;
     border-radius: 8px;
     color: #8a74fb;
     font-weight: bold;
+}
+
+.reviews {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    font-family: var(--font-pixel);
+}
+
+.reviews button {
+    max-width: 100px;
+    align-self: flex-end;
+}
+
+.reviews textarea {
+    height: 100px;
+}
+
+.comentario-item {
+    font-size: 20px;
 }
