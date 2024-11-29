@@ -243,6 +243,11 @@ h6 {
     color: var(--color-primary);
 }
 
+.fav-game h2 {
+    width: 300px;
+    text-align: center;
+}
+
 #detalhesUsuario button {
     margin-bottom: 10px;
 }

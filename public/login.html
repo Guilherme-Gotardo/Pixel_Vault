@@ -121,7 +121,7 @@
 
                     <div class="login-box">
                         <div class="login-box-input">
-                            <input type="password" required class="login-input" placeholder=" " autocomplete="off">
+                            <input type="password" required class="login-input" placeholder=" " id="confirmacao_senha" autocomplete="off">
                             <label for="login-pass" class="login-label">Confirme sua senha</label>
                         </div>
                     </div>
@@ -147,6 +147,7 @@
                 const tamanhoNome = nomeVar.length > 1;
                 const emailConterArroba = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVar);
                 const tamanhoSenha = senhaVar.length > 6;
+                const confirmaSenha = senhaVar == confirmacao_senha.value
 
                 // Verificando se há algum campo em branco
                 if (
@@ -154,21 +155,15 @@
                     emailVar == "" ||
                     senhaVar == ""
                 ) {
-                    mensagemErro.innerHTML = "Campos obrigatórios estão vazios";
-                    mensagemErro.style.display = "block";
-                    return false;
+                    return alert("Campos obrigatórios estão vazios");
                 } else if (!tamanhoNome) {
-                    mensagemErro.innerHTML = "O campo de nome deve ter mais que um caractere";
-                    mensagemErro.style.display = "block";
-                    return false;
+                    return alert("O campo de nome deve ter mais que um caractere");
                 } else if (!emailConterArroba) {
-                    mensagemErro.innerHTML = "O campo de email deve conter '@' e '.'";
-                    mensagemErro.style.display = "block";
-                    return false;
+                    return alert("O campo de email deve conter '@' e '.'");
                 } else if (!tamanhoSenha) {
-                    mensagemErro.innerHTML = "A senha precisa ter mais que 6 caracteres";
-                    mensagemErro.style.display = "block";
-                    return false;
+                    return alert("A senha precisa ter mais que 6 caracteres");
+                } else if (!confirmaSenha) {
+                    return alert("As senhas precisam ser iguais");
                 }
 
                 // Enviando o valor da nova input
@@ -188,14 +183,12 @@
 
                         if (resposta.ok) {
                             // Exibe a mensagem de sucesso
-                            mensagemErro.innerHTML = "Cadastro realizado com sucesso! Você será redirecionado para o login!";
-                            mensagemErro.style.color = "green";
-                            mensagemErro.style.display = "block";
+                            alert("Cadastro realizado com sucesso! Você será redirecionado para o login!");
 
                             // Redireciona para o login
                             setTimeout(() => {
-                                window.location.href = "/login.html"; // Redirecionando para a página de login após 5 segundos
-                            }, 3000);
+                                window.location.href = "/login.html"; // Redirecionando para a página de login após 2 segundos
+                            }, 2000);
 
                             limparFormulario(); // Chama a função para limpar os campos após o cadastro
                         } else {
